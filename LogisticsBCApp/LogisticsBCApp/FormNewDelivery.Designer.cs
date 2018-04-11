@@ -34,6 +34,7 @@
             this.dateTimePickerDeliveryDate = new System.Windows.Forms.DateTimePicker();
             this.buttonAddDelivery = new System.Windows.Forms.Button();
             this.richTextBoxAddress = new System.Windows.Forms.RichTextBox();
+            this.comboBoxTrucks = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // textBoxCustomerName
@@ -47,13 +48,6 @@
             // 
             this.listBoxAreaNames.FormattingEnabled = true;
             this.listBoxAreaNames.ItemHeight = 25;
-            this.listBoxAreaNames.Items.AddRange(new object[] {
-            "Vancouver",
-            "Burnaby",
-            "New Westminster",
-            "Surrey",
-            "Coquitlam",
-            "Richmond"});
             this.listBoxAreaNames.Location = new System.Drawing.Point(387, 306);
             this.listBoxAreaNames.Name = "listBoxAreaNames";
             this.listBoxAreaNames.Size = new System.Drawing.Size(388, 179);
@@ -61,21 +55,21 @@
             // 
             // textBoxWeight
             // 
-            this.textBoxWeight.Location = new System.Drawing.Point(387, 538);
+            this.textBoxWeight.Location = new System.Drawing.Point(397, 602);
             this.textBoxWeight.Name = "textBoxWeight";
             this.textBoxWeight.Size = new System.Drawing.Size(180, 31);
             this.textBoxWeight.TabIndex = 3;
             // 
             // dateTimePickerDeliveryDate
             // 
-            this.dateTimePickerDeliveryDate.Location = new System.Drawing.Point(392, 610);
+            this.dateTimePickerDeliveryDate.Location = new System.Drawing.Point(402, 674);
             this.dateTimePickerDeliveryDate.Name = "dateTimePickerDeliveryDate";
             this.dateTimePickerDeliveryDate.Size = new System.Drawing.Size(348, 31);
             this.dateTimePickerDeliveryDate.TabIndex = 4;
             // 
             // buttonAddDelivery
             // 
-            this.buttonAddDelivery.Location = new System.Drawing.Point(325, 714);
+            this.buttonAddDelivery.Location = new System.Drawing.Point(335, 778);
             this.buttonAddDelivery.Name = "buttonAddDelivery";
             this.buttonAddDelivery.Size = new System.Drawing.Size(298, 80);
             this.buttonAddDelivery.TabIndex = 5;
@@ -91,11 +85,20 @@
             this.richTextBoxAddress.TabIndex = 6;
             this.richTextBoxAddress.Text = "";
             // 
+            // comboBoxTrucks
+            // 
+            this.comboBoxTrucks.FormattingEnabled = true;
+            this.comboBoxTrucks.Location = new System.Drawing.Point(391, 524);
+            this.comboBoxTrucks.Name = "comboBoxTrucks";
+            this.comboBoxTrucks.Size = new System.Drawing.Size(441, 33);
+            this.comboBoxTrucks.TabIndex = 7;
+            // 
             // FormNewDelivery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(931, 895);
+            this.ClientSize = new System.Drawing.Size(931, 916);
+            this.Controls.Add(this.comboBoxTrucks);
             this.Controls.Add(this.richTextBoxAddress);
             this.Controls.Add(this.buttonAddDelivery);
             this.Controls.Add(this.dateTimePickerDeliveryDate);
@@ -104,6 +107,7 @@
             this.Controls.Add(this.textBoxCustomerName);
             this.Name = "FormNewDelivery";
             this.Text = "FormNewDelivery";
+            this.Load += new System.EventHandler(this.FormNewDelivery_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -117,5 +121,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerDeliveryDate;
         private System.Windows.Forms.Button buttonAddDelivery;
         private System.Windows.Forms.RichTextBox richTextBoxAddress;
+        private System.Windows.Forms.ComboBox comboBoxTrucks;
     }
 }
