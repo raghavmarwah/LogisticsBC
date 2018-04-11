@@ -58,8 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF Classes\Area.cs" />
+    <Compile Include="EF Classes\C__RefactorLog.cs" />
     <Compile Include="EF Classes\Driver.cs" />
-    <Compile Include="EF Classes\LogisticsBCEntities.cs" />
+    <Compile Include="EF Classes\LogisticsDbEntities.cs" />
     <Compile Include="EF Classes\Package.cs" />
     <Compile Include="EF Classes\Truck.cs" />
     <Compile Include="FormDashboard.cs">

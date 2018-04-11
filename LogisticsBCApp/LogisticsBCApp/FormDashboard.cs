@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LogisticsBCApp.EF_Classes;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 
@@ -15,12 +16,12 @@ namespace LogisticsBCApp
 {
     public partial class FormDashboard : Form
     {
-        LogisticsBCEntities context;
+        LogisticsDbEntities context;
 
         public FormDashboard()
         {
             InitializeComponent();
-            context = new LogisticsBCEntities();
+            context = new LogisticsDbEntities();
 
             // setting debug log
             context.Database.Log = (s => Debug.Write(s));
@@ -28,6 +29,21 @@ namespace LogisticsBCApp
         }
 
         private void buttonReseedData_Click(object sender, EventArgs e)
+        {
+            ReloadData();
+        }
+
+        private void FormDashboard_Load(object sender, EventArgs e)
+        {
+            //loading data from context and updating DataSource for dataGridViews
+            context.Areas.Load();
+            context.Drivers.Load();
+            context.Packages.Load();
+            context.Trucks.Load();
+            InitialiseDataGridView();
+        }
+
+        private void ReloadData()
         {
             // reset ident for all tables
             context.Database.ExecuteSqlCommand($"DBCC CHECKIDENT('Areas', RESEED, 0)");
@@ -40,6 +56,7 @@ namespace LogisticsBCApp
             context.Drivers.RemoveRange(context.Drivers);
             context.Packages.RemoveRange(context.Packages);
             context.Trucks.RemoveRange(context.Trucks);
+            context.SaveChanges();
 
             //creating blank lists for data
             List<Area> areaList = new List<Area>();
@@ -50,7 +67,7 @@ namespace LogisticsBCApp
             String tempLine;
 
             //opening 'Data_Areas.csv' to populate areaList
-            StreamReader areaFile = File.OpenText("Data_Area.csv");
+            StreamReader areaFile = File.OpenText("Data_Areas.csv");
             while (!areaFile.EndOfStream)
             {
                 tempLine = areaFile.ReadLine();
@@ -60,7 +77,114 @@ namespace LogisticsBCApp
                 });
             }
             areaFile.Close();
-             
+            context.Areas.AddRange(areaList);
+
+            //opening 'Data_Drivers.csv' to populate driverList
+            StreamReader driverFile = File.OpenText("Data_Drivers.csv");
+            while (!driverFile.EndOfStream)
+            {
+                tempLine = driverFile.ReadLine();
+                string[] temp = tempLine.Split(',');
+                driverList.Add(new Driver
+                {
+                    DriverName = temp[0],
+                    TotalEarnings = decimal.Parse(temp[1])
+                });
+            }
+            driverFile.Close();
+            context.Drivers.AddRange(driverList);
+
+
+            //opening 'Data_Packages.csv' to populate packageList
+            StreamReader packageFile = File.OpenText("Data_Packages.csv");
+            while (!packageFile.EndOfStream)
+            {
+                tempLine = packageFile.ReadLine();
+                string[] temp = tempLine.Split(',');
+
+                //checking delivery status by date
+                bool packageDelivered = false;
+                if (DateTime.Parse(temp[4]).CompareTo(DateTime.Now) <= 0)
+                    packageDelivered = true;
+
+                packageList.Add(new Package
+                {
+                    CustomerName = temp[0],
+                    Address = temp[1],
+                    AreaId = int.Parse(temp[2]),
+                    Weight = decimal.Parse(temp[3]),
+                    DeliveryDate = DateTime.Parse(temp[4]),
+                    StatusDelivered = packageDelivered
+
+                });
+            }
+            packageFile.Close();
+            context.Packages.AddRange(packageList);
+
+            //opening 'Data_Trucks.csv' to populate truckList
+            StreamReader truckFile = File.OpenText("Data_Trucks.csv");
+            while (!truckFile.EndOfStream)
+            {
+                tempLine = truckFile.ReadLine();
+                string[] temp = tempLine.Split(',');
+                truckList.Add(new Truck
+                {
+                    MaxLoad = decimal.Parse(temp[0]),
+                    CurrentLoad = decimal.Parse(temp[1]),
+                    AreaId = int.Parse(temp[2]),
+                    DriverId = int.Parse(temp[3])
+
+                });
+            }
+            truckFile.Close();
+            context.Trucks.AddRange(truckList);
+
+            //saving data
+            context.SaveChanges();
+        }
+
+        private void InitialiseDataGridView()
+        {
+            //setting attributes
+            dataGridViewCurrentDeliveries.ReadOnly = true;
+            dataGridViewCurrentDeliveries.AllowUserToAddRows = false;
+            dataGridViewCurrentDeliveries.AllowUserToDeleteRows = false;
+            dataGridViewCurrentDeliveries.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCurrentDeliveries.AutoGenerateColumns = false;
+
+            //defining columns
+            DataGridViewTextBoxColumn[] currentDeliveryInfo = new DataGridViewTextBoxColumn[]
+            {
+                new DataGridViewTextBoxColumn() {Name = "Customer Name" },
+                new DataGridViewTextBoxColumn() {Name = "Address" },
+                new DataGridViewTextBoxColumn() {Name = "Area Name" },
+                new DataGridViewTextBoxColumn() {Name = "Weight (lbs)" },
+                new DataGridViewTextBoxColumn() {Name = "Delivery Date" }
+            };
+            dataGridViewCurrentDeliveries.Columns.Clear();
+            dataGridViewCurrentDeliveries.Columns.AddRange(currentDeliveryInfo);
+
+            //querying context.Packages fow deliveries which aren't delivered yet.
+            //context.Packages and context.Areas to extract the AreaName using AreaId
+            var deliveryQuery = from packages in context.Packages join
+                                areas in context.Areas on packages.AreaId equals areas.AreaId
+                                where packages.StatusDelivered == false
+                                orderby packages.DeliveryDate
+                                select new
+                                {
+                                    CustomerName = packages.CustomerName,
+                                    Address = packages.Address,
+                                    AreaName = areas.AreaName,
+                                    Weight = packages.Weight,
+                                    DeliveryDate = packages.DeliveryDate
+                                };
+
+            dataGridViewCurrentDeliveries.Rows.Clear();
+            //populating dataGridViewCurrentDeliveries with data from query
+            foreach(var tempDelivery in deliveryQuery)
+            {
+                dataGridViewCurrentDeliveries.Rows.Add(tempDelivery.CustomerName, tempDelivery.Address, tempDelivery.AreaName, tempDelivery.Weight, tempDelivery.DeliveryDate.ToString("MM/dd/yyyy"));
+            }
         }
     }
 }
