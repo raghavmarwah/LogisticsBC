@@ -11,21 +11,39 @@ using LogisticsBCApp.EF_Classes;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 
 namespace LogisticsBCApp
 {
     public partial class FormDashboard : Form
     {
         LogisticsDbEntities context;
+        Color selectedButtonColor = System.Drawing.ColorTranslator.FromHtml("#a5a5a5");
 
         public FormDashboard()
         {
             InitializeComponent();
             context = new LogisticsDbEntities();
 
+            //additional visual attributes
+            pictureBoxLogo.SizeMode = PictureBoxSizeMode.StretchImage;
+            buttonCloseForm.FlatAppearance.BorderSize = 0;
+            buttonDashboard.FlatAppearance.BorderSize = 0;
+            buttonPastDeliveries.FlatAppearance.BorderSize = 0;
+            buttonTrucks.FlatAppearance.BorderSize = 0;
+            buttonDrivers.FlatAppearance.BorderSize = 0;
+            this.Width = 805;
+            this.Height = 670;
+            ButtonColorDefault();
+            buttonDashboard.BackColor = selectedButtonColor;
+
             // setting debug log
             context.Database.Log = (s => Debug.Write(s));
             context.SaveChanges();
+
+            //setting all panels to hidden except panelActiveDeliveries
+            HideAllPanels();
+            panelActiveDeliveries.Visible = true;
         }
 
         private void buttonReseedData_Click(object sender, EventArgs e)
@@ -240,6 +258,48 @@ namespace LogisticsBCApp
         {
             FormNewDelivery newDeiliveryForm = new FormNewDelivery();
             newDeiliveryForm.Show();
+        }
+
+        private void HideAllPanels()
+        {
+            panelActiveDeliveries.Visible = false;
+        }
+        private void ButtonColorDefault()
+        {
+            Color defaultNavButtonColor = System.Drawing.ColorTranslator.FromHtml("#6D6D6D");
+            buttonDashboard.BackColor = defaultNavButtonColor;
+            buttonPastDeliveries.BackColor = defaultNavButtonColor;
+            buttonTrucks.BackColor = defaultNavButtonColor;
+            buttonDrivers.BackColor = defaultNavButtonColor;
+        }
+
+        private void buttonCloseForm_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void buttonDashboard_Click(object sender, EventArgs e)
+        {
+            ButtonColorDefault();
+            buttonDashboard.BackColor = selectedButtonColor;
+        }
+
+        private void buttonPastDeliveries_Click(object sender, EventArgs e)
+        {
+            ButtonColorDefault();
+            buttonPastDeliveries.BackColor = selectedButtonColor;
+        }
+
+        private void buttonTrucks_Click(object sender, EventArgs e)
+        {
+            ButtonColorDefault();
+            buttonTrucks.BackColor = selectedButtonColor;
+        }
+
+        private void buttonDrivers_Click(object sender, EventArgs e)
+        {
+            ButtonColorDefault();
+            buttonDrivers.BackColor = selectedButtonColor;
         }
     }
 }
