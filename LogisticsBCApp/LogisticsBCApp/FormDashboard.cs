@@ -65,82 +65,118 @@ namespace LogisticsBCApp
             List<Truck> truckList = new List<Truck>();
 
             String tempLine;
+            BackgroundActivity backgroundAct = new BackgroundActivity();
 
             //opening 'Data_Areas.csv' to populate areaList
-            StreamReader areaFile = File.OpenText("Data_Areas.csv");
-            while (!areaFile.EndOfStream)
+            try
             {
-                tempLine = areaFile.ReadLine();
-                areaList.Add(new Area
+                StreamReader areaFile = File.OpenText("Data_Areas.csv");
+                while (!areaFile.EndOfStream)
                 {
-                    AreaName = tempLine
-                });
+                    tempLine = areaFile.ReadLine();
+                    areaList.Add(new Area
+                    {
+                        AreaName = tempLine
+                    });
+                }
+                areaFile.Close();
             }
-            areaFile.Close();
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show("Error: Data_Areas.csv doesn't exist, contact DB admin.");
+            }
             context.Areas.AddRange(areaList);
+            context.SaveChanges();
 
             //opening 'Data_Drivers.csv' to populate driverList
-            StreamReader driverFile = File.OpenText("Data_Drivers.csv");
-            while (!driverFile.EndOfStream)
+            try
             {
-                tempLine = driverFile.ReadLine();
-                string[] temp = tempLine.Split(',');
-                driverList.Add(new Driver
+                StreamReader driverFile = File.OpenText("Data_Drivers.csv");
+                while (!driverFile.EndOfStream)
                 {
-                    DriverName = temp[0],
-                    TotalEarnings = decimal.Parse(temp[1])
-                });
+                    tempLine = driverFile.ReadLine();
+                    string[] temp = tempLine.Split(',');
+                    driverList.Add(new Driver
+                    {
+                        DriverName = temp[0],
+                        TotalEarnings = decimal.Parse(temp[1])
+                    });
+                }
+                driverFile.Close();
             }
-            driverFile.Close();
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show("Error: Data_Drivers.csv doesn't exist, contact DB admin.");
+            }
             context.Drivers.AddRange(driverList);
-
-
-            //opening 'Data_Packages.csv' to populate packageList
-            StreamReader packageFile = File.OpenText("Data_Packages.csv");
-            while (!packageFile.EndOfStream)
-            {
-                tempLine = packageFile.ReadLine();
-                string[] temp = tempLine.Split(',');
-
-                //checking delivery status by date
-                bool packageDelivered = false;
-                if (DateTime.Parse(temp[4]).CompareTo(DateTime.Now) <= 0)
-                    packageDelivered = true;
-
-                packageList.Add(new Package
-                {
-                    CustomerName = temp[0],
-                    Address = temp[1],
-                    AreaId = int.Parse(temp[2]),
-                    Weight = decimal.Parse(temp[3]),
-                    DeliveryDate = DateTime.Parse(temp[4]),
-                    StatusDelivered = packageDelivered
-
-                });
-            }
-            packageFile.Close();
-            context.Packages.AddRange(packageList);
+            context.SaveChanges();
 
             //opening 'Data_Trucks.csv' to populate truckList
-            StreamReader truckFile = File.OpenText("Data_Trucks.csv");
-            while (!truckFile.EndOfStream)
+            try
             {
-                tempLine = truckFile.ReadLine();
-                string[] temp = tempLine.Split(',');
-                truckList.Add(new Truck
+                StreamReader truckFile = File.OpenText("Data_Trucks.csv");
+                while (!truckFile.EndOfStream)
                 {
-                    MaxLoad = decimal.Parse(temp[0]),
-                    CurrentLoad = decimal.Parse(temp[1]),
-                    AreaId = int.Parse(temp[2]),
-                    DriverId = int.Parse(temp[3])
+                    tempLine = truckFile.ReadLine();
+                    string[] temp = tempLine.Split(',');
+                    truckList.Add(new Truck
+                    {
+                        MaxLoad = decimal.Parse(temp[0]),
+                        CurrentLoad = decimal.Parse(temp[1]),
+                        AreaId = int.Parse(temp[2]),
+                        DriverId = int.Parse(temp[3])
 
-                });
+                    });
+                }
+                truckFile.Close();
             }
-            truckFile.Close();
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show("Error: Data_Trucks.csv doesn't exist, contact DB admin.");
+            }
             context.Trucks.AddRange(truckList);
-
-            //saving data
             context.SaveChanges();
+
+            //opening 'Data_Packages.csv' to populate packageList
+            try
+            {
+                StreamReader packageFile = File.OpenText("Data_Packages.csv");
+                while (!packageFile.EndOfStream)
+                {
+                    tempLine = packageFile.ReadLine();
+                    string[] temp = tempLine.Split(',');
+
+                    //checking delivery status by date
+                    bool packageDelivered = false;
+                    if (DateTime.Parse(temp[4]).CompareTo(DateTime.Now) <= 0)
+                        packageDelivered = true;
+
+                    packageList.Add(new Package
+                    {
+                        CustomerName = temp[0],
+                        Address = temp[1],
+                        AreaId = int.Parse(temp[2]),
+                        Weight = decimal.Parse(temp[3]),
+                        DeliveryDate = DateTime.Parse(temp[4]),
+                        StatusDelivered = packageDelivered
+
+                    });
+                    //updating the driver earnings, initially the areaId is the same as driverId
+                    //our drivers get $10 per delivery
+                    backgroundAct.UpdateDriverEarnings(int.Parse(temp[2]));
+                }
+                packageFile.Close();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show("Error: Data_Packages.csv doesn't exist, contact DB admin.");
+            }
+            context.Packages.AddRange(packageList);
+            context.SaveChanges();
+
+            //populating DataGridView
+            InitialiseDataGridView();
+            FeedData();
         }
 
         private void InitialiseDataGridView()
@@ -164,10 +200,17 @@ namespace LogisticsBCApp
             dataGridViewCurrentDeliveries.Columns.Clear();
             dataGridViewCurrentDeliveries.Columns.AddRange(currentDeliveryInfo);
 
+            //calling method to populate the DataGridView
+            FeedData();
+
+        }
+
+        private void FeedData()
+        {
             //querying context.Packages fow deliveries which aren't delivered yet.
             //context.Packages and context.Areas to extract the AreaName using AreaId
-            var deliveryQuery = from packages in context.Packages join
-                                areas in context.Areas on packages.AreaId equals areas.AreaId
+            var deliveryQuery = from packages in context.Packages
+                                join areas in context.Areas on packages.AreaId equals areas.AreaId
                                 where packages.StatusDelivered == false
                                 orderby packages.DeliveryDate
                                 select new
@@ -181,10 +224,22 @@ namespace LogisticsBCApp
 
             dataGridViewCurrentDeliveries.Rows.Clear();
             //populating dataGridViewCurrentDeliveries with data from query
-            foreach(var tempDelivery in deliveryQuery)
+            foreach (var tempDelivery in deliveryQuery)
             {
                 dataGridViewCurrentDeliveries.Rows.Add(tempDelivery.CustomerName, tempDelivery.Address, tempDelivery.AreaName, tempDelivery.Weight, tempDelivery.DeliveryDate.ToString("MM/dd/yyyy"));
             }
+        }
+
+        private void buttonRefreshData_Click(object sender, EventArgs e)
+        {
+            InitialiseDataGridView();
+            FeedData();
+        }
+
+        private void buttonNewDelivery_Click(object sender, EventArgs e)
+        {
+            FormNewDelivery newDeiliveryForm = new FormNewDelivery();
+            newDeiliveryForm.Show();
         }
     }
 }
