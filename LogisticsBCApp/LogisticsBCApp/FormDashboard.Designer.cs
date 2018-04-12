@@ -130,7 +130,6 @@
             this.panelActiveDeliveries.Name = "panelActiveDeliveries";
             this.panelActiveDeliveries.Size = new System.Drawing.Size(1614, 1291);
             this.panelActiveDeliveries.TabIndex = 4;
-            this.panelActiveDeliveries.Visible = false;
             // 
             // labelUpcomingDeliveries
             // 
@@ -247,7 +246,6 @@
             this.panelPastDeliveries.Name = "panelPastDeliveries";
             this.panelPastDeliveries.Size = new System.Drawing.Size(1614, 1206);
             this.panelPastDeliveries.TabIndex = 5;
-            this.panelPastDeliveries.Visible = false;
             // 
             // panelBottomLayer
             // 
@@ -288,7 +286,6 @@
             this.panelTrucks.Name = "panelTrucks";
             this.panelTrucks.Size = new System.Drawing.Size(1613, 1208);
             this.panelTrucks.TabIndex = 6;
-            this.panelTrucks.Visible = false;
             // 
             // dataGridViewTruckInformation
             // 
@@ -318,7 +315,6 @@
             this.panelDriver.Name = "panelDriver";
             this.panelDriver.Size = new System.Drawing.Size(1613, 1208);
             this.panelDriver.TabIndex = 7;
-            this.panelDriver.Visible = false;
             // 
             // dataGridViewDriverInformation
             // 

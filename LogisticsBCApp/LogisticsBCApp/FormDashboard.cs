@@ -27,7 +27,7 @@ namespace LogisticsBCApp
             InitializeComponent();
             context = new LogisticsDbEntities();
 
-            //additional visual attributes
+            //visual attributes
             pictureBoxLogo.SizeMode = PictureBoxSizeMode.StretchImage;
             buttonCloseForm.FlatAppearance.BorderSize = 0;
             buttonDashboard.FlatAppearance.BorderSize = 0;
@@ -43,9 +43,8 @@ namespace LogisticsBCApp
             context.Database.Log = (s => Debug.Write(s));
             context.SaveChanges();
 
-            //setting all panels to hidden except panelActiveDeliveries
-            HideAllPanels();
-            panelActiveDeliveries.Visible = true;
+            //bringing panelActiveDeliveries to front initially.
+            panelActiveDeliveries.BringToFront();
 
             //defining event handlers
             textBoxCustomerName.TextChanged += TextBoxCustomerName_TextChanged;
@@ -74,11 +73,21 @@ namespace LogisticsBCApp
             FeedDataCurrentDeliveries();
         }
 
+        /// <summary>
+        /// Clicking buttonReseedData calls ReloadData()
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonReseedData_Click(object sender, EventArgs e)
         {
             ReloadData();
         }
 
+        /// <summary>
+        /// Actions to be performed when the form loads
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormDashboard_Load(object sender, EventArgs e)
         {
             //loading data from context and updating DataSource for dataGridViews
@@ -89,6 +98,10 @@ namespace LogisticsBCApp
             InitialiseDataGridView();
         }
 
+        /// <summary>
+        /// This method clears all tables in the db and then adds fresh data
+        /// from the given csv files, to bring back the db to initial state.
+        /// </summary>
         private void ReloadData()
         {
             // reset ident for all tables
@@ -224,6 +237,9 @@ namespace LogisticsBCApp
             InitialiseDataGridView();
         }
 
+        /// <summary>
+        /// This method sets the attributes for the DataGridViews, it then defines columns and adds them.
+        /// </summary>
         private void InitialiseDataGridView()
         {
             //setting attributes for dataGridViewCurrentDeliveries
@@ -305,6 +321,9 @@ namespace LogisticsBCApp
 
         }
 
+        /// <summary>
+        /// Method to pupulate dataGridViewCurrentDeliveries
+        /// </summary>
         private void FeedDataCurrentDeliveries()
         {
             //dataGridViewCurrentDeliveries
@@ -341,6 +360,10 @@ namespace LogisticsBCApp
                 dataGridViewCurrentDeliveries.Rows.Add(tempDelivery.CustomerName, tempDelivery.Address, tempDelivery.AreaName, tempDelivery.Weight, tempDelivery.DeliveryDate.ToString("MM/dd/yyyy"));
             }
         }
+
+        /// <summary>
+        /// Method to pupulate dataGridViewPastDeliveries
+        /// </summary>
         private void FeedDataPastDeliveries()
         {
             //dataGridViewPastDeliveries
@@ -377,6 +400,10 @@ namespace LogisticsBCApp
                 dataGridViewPastDeliveries.Rows.Add(tempDelivery.CustomerName, tempDelivery.Address, tempDelivery.AreaName, tempDelivery.Weight, tempDelivery.DeliveryDate.ToString("MM/dd/yyyy"));
             }
         }
+
+        /// <summary>
+        /// Method to pupulate dataGridViewTruckInformation
+        /// </summary>
         private void FeedDataTrucks()
         {
             //dataGridViewTruckInformation
@@ -402,6 +429,10 @@ namespace LogisticsBCApp
                 dataGridViewTruckInformation.Rows.Add(tempTruck.TruckId, tempTruck.MaxLoad, tempTruck.AreaName, tempTruck.DriverName);
             }
         }
+
+        /// <summary>
+        /// Method to pupulate dataGridViewDriverInformation
+        /// </summary>
         private void FeedDataDrivers()
         {
             //dataGridViewDriverInformation
@@ -418,24 +449,34 @@ namespace LogisticsBCApp
             }
         }
 
+        /// <summary>
+        /// Method to refresh data in dataGridViewCurrentDeliveries
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRefreshData_Click(object sender, EventArgs e)
         {
             InitialiseDataGridView();
             FeedDataCurrentDeliveries();
         }
 
+        /// <summary>
+        /// Displays FormNewDelivery by creating an object of that class.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonNewDelivery_Click(object sender, EventArgs e)
         {
             FormNewDelivery newDeiliveryForm = new FormNewDelivery();
             newDeiliveryForm.Show();
         }
 
-        private void HideAllPanels()
-        {
-            panelActiveDeliveries.Visible = false;
-        }
+        /// <summary>
+        /// Sets the default color on all the navbar buttons
+        /// </summary>
         private void ButtonColorDefault()
         {
+            //converting to Color from Hex
             Color defaultNavButtonColor = System.Drawing.ColorTranslator.FromHtml("#6D6D6D");
             buttonDashboard.BackColor = defaultNavButtonColor;
             buttonPastDeliveries.BackColor = defaultNavButtonColor;
@@ -445,15 +486,19 @@ namespace LogisticsBCApp
 
         private void buttonCloseForm_Click(object sender, EventArgs e)
         {
+            //close this form
             this.Close();
         }
 
+        /*
+         *  The following 4 methods set the nvabar buttons to default colors.
+         *  Then they set selected color on the button which was clicked to make them look highlighted.
+         *  Then bring the respective panel to the front, this modifies the z-index (display priority). 
+         */
         private void buttonDashboard_Click(object sender, EventArgs e)
         {
             ButtonColorDefault();
             buttonDashboard.BackColor = selectedButtonColor;
-            HideAllPanels();
-            panelActiveDeliveries.Visible = true;
             panelActiveDeliveries.BringToFront();
         }
 
@@ -461,8 +506,6 @@ namespace LogisticsBCApp
         {
             ButtonColorDefault();
             buttonPastDeliveries.BackColor = selectedButtonColor;
-            HideAllPanels();
-            panelPastDeliveries.Visible = true;
             panelPastDeliveries.BringToFront();
         }
 
@@ -470,8 +513,6 @@ namespace LogisticsBCApp
         {
             ButtonColorDefault();
             buttonTrucks.BackColor = selectedButtonColor;
-            HideAllPanels();
-            panelTrucks.Visible = true;
             panelTrucks.BringToFront();
         }
 
@@ -479,17 +520,17 @@ namespace LogisticsBCApp
         {
             ButtonColorDefault();
             buttonDrivers.BackColor = selectedButtonColor;
-            HideAllPanels();
-            panelDriver.Visible = true;
             panelDriver.BringToFront();
         }
 
+        //clears the TextBoxes in panelCurrentDeliveries
         private void buttonClearFilters_Click(object sender, EventArgs e)
         {
             textBoxCustomerName.Text = "";
             textBoxCustomerAddress.Text = "";
         }
 
+        //clears the TextBoxes in panelPastDeliveries
         private void buttonClearFiltersPast_Click(object sender, EventArgs e)
         {
             textBoxCustomerNamePast.Text = "";

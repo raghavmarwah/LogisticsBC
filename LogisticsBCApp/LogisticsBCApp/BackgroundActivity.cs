@@ -11,6 +11,10 @@ namespace LogisticsBCApp
 {
     class BackgroundActivity
     {
+        /// <summary>
+        /// Updates the TotalEarnings of a driver by $10
+        /// </summary>
+        /// <param name="driverId">DriverId</param>
         public void UpdateDriverEarnings(int driverId)
         {
             using (var context = new LogisticsDbEntities())
