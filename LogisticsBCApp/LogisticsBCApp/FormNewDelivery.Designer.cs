@@ -61,14 +61,14 @@
             // 
             // textBoxWeight
             // 
-            this.textBoxWeight.Location = new System.Drawing.Point(387, 601);
+            this.textBoxWeight.Location = new System.Drawing.Point(387, 689);
             this.textBoxWeight.Name = "textBoxWeight";
             this.textBoxWeight.Size = new System.Drawing.Size(445, 31);
             this.textBoxWeight.TabIndex = 3;
             // 
             // dateTimePickerDeliveryDate
             // 
-            this.dateTimePickerDeliveryDate.Location = new System.Drawing.Point(388, 674);
+            this.dateTimePickerDeliveryDate.Location = new System.Drawing.Point(388, 534);
             this.dateTimePickerDeliveryDate.Name = "dateTimePickerDeliveryDate";
             this.dateTimePickerDeliveryDate.Size = new System.Drawing.Size(444, 31);
             this.dateTimePickerDeliveryDate.TabIndex = 4;
@@ -94,7 +94,7 @@
             // comboBoxTrucks
             // 
             this.comboBoxTrucks.FormattingEnabled = true;
-            this.comboBoxTrucks.Location = new System.Drawing.Point(387, 524);
+            this.comboBoxTrucks.Location = new System.Drawing.Point(387, 612);
             this.comboBoxTrucks.Name = "comboBoxTrucks";
             this.comboBoxTrucks.Size = new System.Drawing.Size(445, 33);
             this.comboBoxTrucks.TabIndex = 7;
@@ -129,7 +129,7 @@
             // labelSelectTruck
             // 
             this.labelSelectTruck.AutoSize = true;
-            this.labelSelectTruck.Location = new System.Drawing.Point(66, 524);
+            this.labelSelectTruck.Location = new System.Drawing.Point(66, 612);
             this.labelSelectTruck.Name = "labelSelectTruck";
             this.labelSelectTruck.Size = new System.Drawing.Size(138, 25);
             this.labelSelectTruck.TabIndex = 11;
@@ -138,7 +138,7 @@
             // labelWeight
             // 
             this.labelWeight.AutoSize = true;
-            this.labelWeight.Location = new System.Drawing.Point(66, 601);
+            this.labelWeight.Location = new System.Drawing.Point(66, 689);
             this.labelWeight.Name = "labelWeight";
             this.labelWeight.Size = new System.Drawing.Size(223, 25);
             this.labelWeight.TabIndex = 12;
@@ -147,7 +147,7 @@
             // labelDeliveryDate
             // 
             this.labelDeliveryDate.AutoSize = true;
-            this.labelDeliveryDate.Location = new System.Drawing.Point(66, 674);
+            this.labelDeliveryDate.Location = new System.Drawing.Point(66, 534);
             this.labelDeliveryDate.Name = "labelDeliveryDate";
             this.labelDeliveryDate.Size = new System.Drawing.Size(204, 25);
             this.labelDeliveryDate.TabIndex = 13;

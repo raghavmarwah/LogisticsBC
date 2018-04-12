@@ -536,5 +536,56 @@ namespace LogisticsBCApp
             textBoxCustomerNamePast.Text = "";
             textBoxCustomerAddressPast.Text = "";
         }
+
+        /// <summary>
+        /// This method export all the deliveries fed into the system in a csv format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonExportData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveFile = new SaveFileDialog();
+                StreamWriter outputFile = null;
+
+                //setting the default log output format to csv files
+                saveFile.Filter = "CSV|*.csv";
+                saveFile.DefaultExt = ".csv";
+                //restrict the user from adding more extensions
+                saveFile.AddExtension = false;
+
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    using (outputFile = File.CreateText(saveFile.FileName))
+                    {
+                        var logQuery = from packages in context.Packages
+                                       join areas in context.Areas on packages.AreaId equals areas.AreaId
+                                       orderby packages.DeliveryDate
+                                       select new
+                                       {
+                                           CustomerName = packages.CustomerName,
+                                           Address = packages.Address,
+                                           AreaName = areas.AreaName,
+                                           Weight = packages.Weight,
+                                           DeliveryDate = packages.DeliveryDate
+                                       };
+
+                        //writing query to the file.
+                        foreach (var tempPackage in logQuery)
+                        {
+                            outputFile.WriteLine($"{tempPackage.CustomerName.Trim()},{tempPackage.Address.Trim()},{tempPackage.AreaName.Trim()},{tempPackage.Weight.ToString().Trim()},{tempPackage.DeliveryDate.ToString("MM-dd-yyyy").Trim()}");
+                        }
+                    }
+                }
+
+                outputFile.Close();
+                MessageBox.Show($"{saveFile.FileName} exported successfully!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
     }
 }

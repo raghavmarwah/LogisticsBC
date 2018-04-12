@@ -63,6 +63,7 @@
             this.labelSearchCutomerNamePast = new System.Windows.Forms.Label();
             this.textBoxCustomerAddressPast = new System.Windows.Forms.TextBox();
             this.textBoxCustomerNamePast = new System.Windows.Forms.TextBox();
+            this.buttonExportData = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentDeliveries)).BeginInit();
             this.panelActiveDeliveries.SuspendLayout();
             this.panelTopNavigation.SuspendLayout();
@@ -239,6 +240,7 @@
             // 
             // panelPastDeliveries
             // 
+            this.panelPastDeliveries.Controls.Add(this.buttonExportData);
             this.panelPastDeliveries.Controls.Add(this.groupBoxFilterControlsPast);
             this.panelPastDeliveries.Controls.Add(this.labelPastDeliveries);
             this.panelPastDeliveries.Controls.Add(this.dataGridViewPastDeliveries);
@@ -448,6 +450,16 @@
             this.textBoxCustomerNamePast.Size = new System.Drawing.Size(272, 31);
             this.textBoxCustomerNamePast.TabIndex = 0;
             // 
+            // buttonExportData
+            // 
+            this.buttonExportData.Location = new System.Drawing.Point(1357, 1101);
+            this.buttonExportData.Name = "buttonExportData";
+            this.buttonExportData.Size = new System.Drawing.Size(212, 62);
+            this.buttonExportData.TabIndex = 7;
+            this.buttonExportData.Text = "Export All Data";
+            this.buttonExportData.UseVisualStyleBackColor = true;
+            this.buttonExportData.Click += new System.EventHandler(this.buttonExportData_Click);
+            // 
             // FormDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -519,6 +531,7 @@
         private System.Windows.Forms.Label labelSearchCutomerNamePast;
         private System.Windows.Forms.TextBox textBoxCustomerAddressPast;
         private System.Windows.Forms.TextBox textBoxCustomerNamePast;
+        private System.Windows.Forms.Button buttonExportData;
     }
 }
 

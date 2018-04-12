@@ -88,17 +88,18 @@ namespace LogisticsBCApp
             comboBoxTrucks.Items.Clear();
             //querying context.Trucks to retrieve trucks in that area
             var availableTrucksQuery = context.Trucks.Where(x => x.AreaId == areaId).Select(x => x);
+
             int count = 0;
             foreach(var truck in availableTrucksQuery)
             {
                 if (count == 0)
                 {
-                    String dataLine = $"Id: {truck.TruckId}, Current Load: {truck.CurrentLoad}, Max Load: {truck.MaxLoad}";
+                    String dataLine = $"Id: {truck.TruckId}, Max Load: {truck.MaxLoad}";
                     comboBoxTrucks.Items.Add(dataLine);
                     comboBoxTrucks.Text = dataLine;
                 }
                 else
-                    comboBoxTrucks.Items.Add($"Id: {truck.TruckId}, Current Load: {truck.CurrentLoad}, Max Load: {truck.MaxLoad}");
+                    comboBoxTrucks.Items.Add($"Id: {truck.TruckId}, Max Load: {truck.MaxLoad}");
                 count++;
             }
         }
