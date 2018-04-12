@@ -31,6 +31,7 @@ namespace LogisticsBCApp
 
         private void buttonAddDelivery_Click(object sender, EventArgs e)
         {
+            BackgroundActivity backgroundAct = new BackgroundActivity();
             try
             {
                 context.Packages.Add(new Package
@@ -43,6 +44,9 @@ namespace LogisticsBCApp
                     StatusDelivered = false
                     //by default a new package is added as not delivered
                 });
+                //updating the driver earnings, areaId is the same as driverId
+                //our drivers get $10 per delivery
+                backgroundAct.UpdateDriverEarnings(listBoxAreaNames.SelectedIndex + 1);
             }
             catch (Exception ex)
             {
