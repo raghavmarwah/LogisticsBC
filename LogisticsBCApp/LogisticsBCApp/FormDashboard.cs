@@ -500,6 +500,7 @@ namespace LogisticsBCApp
             ButtonColorDefault();
             buttonDashboard.BackColor = selectedButtonColor;
             panelActiveDeliveries.BringToFront();
+            FeedDataCurrentDeliveries();
         }
 
         private void buttonPastDeliveries_Click(object sender, EventArgs e)
@@ -507,6 +508,7 @@ namespace LogisticsBCApp
             ButtonColorDefault();
             buttonPastDeliveries.BackColor = selectedButtonColor;
             panelPastDeliveries.BringToFront();
+            FeedDataPastDeliveries();
         }
 
         private void buttonTrucks_Click(object sender, EventArgs e)
@@ -514,6 +516,7 @@ namespace LogisticsBCApp
             ButtonColorDefault();
             buttonTrucks.BackColor = selectedButtonColor;
             panelTrucks.BringToFront();
+            FeedDataTrucks();
         }
 
         private void buttonDrivers_Click(object sender, EventArgs e)
@@ -521,6 +524,7 @@ namespace LogisticsBCApp
             ButtonColorDefault();
             buttonDrivers.BackColor = selectedButtonColor;
             panelDriver.BringToFront();
+            FeedDataDrivers();
         }
 
         //clears the TextBoxes in panelCurrentDeliveries
