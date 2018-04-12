@@ -21,6 +21,10 @@ namespace LogisticsBCApp
             InitializeComponent();
             context = new LogisticsDbEntities();
 
+            //changing title of the form
+            this.Text = "Add New Delivery";
+
+            //adding event listener
             listBoxAreaNames.SelectedIndexChanged += ListBoxAreaNames_SelectedIndexChanged;
         }
 
@@ -29,6 +33,9 @@ namespace LogisticsBCApp
             UpdateAvailableTrucks(listBoxAreaNames.SelectedIndex+1);
         }
 
+        /// <summary>
+        /// This method just adds a new Package object to the context and syncs it to the db.
+        /// </summary>
         private void buttonAddDelivery_Click(object sender, EventArgs e)
         {
             BackgroundActivity backgroundAct = new BackgroundActivity();
@@ -71,9 +78,15 @@ namespace LogisticsBCApp
             listBoxAreaNames.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// This method updates the available trucks for the selected city.
+        /// </summary>
+        /// <param name="areaId">AreaId</param>
         private void UpdateAvailableTrucks(int areaId)
         {
+            //clearing the comboBoxTrucks
             comboBoxTrucks.Items.Clear();
+            //querying context.Trucks to retrieve trucks in that area
             var availableTrucksQuery = context.Trucks.Where(x => x.AreaId == areaId).Select(x => x);
             int count = 0;
             foreach(var truck in availableTrucksQuery)

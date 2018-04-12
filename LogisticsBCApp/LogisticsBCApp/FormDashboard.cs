@@ -414,7 +414,7 @@ namespace LogisticsBCApp
             //populating dataGridViewDriverInformation with data from query
             foreach (var tempDriver in driverInfoQuery)
             {
-                dataGridViewDriverInformation.Rows.Add(tempDriver.DriverId, tempDriver.DriverName, tempDriver.TotalEarnings);
+                dataGridViewDriverInformation.Rows.Add(tempDriver.DriverId, tempDriver.DriverName, tempDriver.TotalEarnings.ToString("c2"));
             }
         }
 
